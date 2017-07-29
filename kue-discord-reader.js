@@ -29,7 +29,7 @@ function biotmp(token) {
     function queueMSG(msg) {
         var job = queue.create('msg_process', {
             "title": "Discord Message Processing",
-            "content": JSON.stringify({
+            "message-obj": JSON.stringify({
                 "message": msg.content,
                 "channel": {
                     "type": msg.channel.type,
@@ -43,7 +43,13 @@ function biotmp(token) {
                 "author": msg.author,
                 "tts": msg.tts,
                 "system": msg.system,
-                "nonce": msg.nonce
+                "nonce": msg.nonce,
+                "mentions": {
+                    "everyone": msg.mentions.everyone,
+                    "users": JSON.stringify(msg.mentions.users),
+                    "roles": JSON.stringify(msg.mentions.roles)
+
+                }
             })
 
 
