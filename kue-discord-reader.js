@@ -67,8 +67,10 @@ function biotmp(token) {
         };
         var job = queue.create('msg_process', {
             "title": "Discord Message Processing",
-            "message-obj": JSON.stringify(elMSGObj, censor(elMSGObj))
-
+            "message-obj": JSON.stringify(elMSGObj, function( key, value) {
+            if( key == 'parent') { return value.id;}
+            else {return value;}
+        })
 
         }).priority("low").save( function(err){
             if( !err ) console.log( job.id );
