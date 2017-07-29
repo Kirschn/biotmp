@@ -15,6 +15,9 @@ var clientState = {
     "loginName": null,
     "onlineSince": null
 };
+queue.on( 'error', function( err ) {
+    console.log( 'Oops... ', err );
+});
 function biotmp(token) {
     discordClient = new Discord.Client();
     discordClient.on('ready', function () {
