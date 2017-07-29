@@ -5,21 +5,22 @@ var config = JSON.parse(fs.readFileSync("config.json", "utf8"));
 var sqlConnection = mysql.createConnection(config.mysql);
 var discordClient = null;
 sqlConnection.connect();
-function censor(censor) {
-    var i = 0;
-
-    return function(key, value) {
-        if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
-            return '[Circular]';
-
-        if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
-            return '[Unknown]';
-
-        ++i; // so we know we aren't using the original object anymore
-
-        return value;
+function simpleStringify (object){
+    var simpleObject = {};
+    for (var prop in object ){
+        if (!object.hasOwnProperty(prop)){
+            continue;
+        }
+        if (typeof(object[prop]) == 'object'){
+            continue;
+        }
+        if (typeof(object[prop]) == 'function'){
+            continue;
+        }
+        simpleObject[prop] = object[prop];
     }
-}
+    return JSON.stringify(simpleObject); // returns cleaned up JSON
+};
 
 var kue = require('kue'),
     queue = kue.createQueue({
@@ -59,7 +60,7 @@ function biotmp(token) {
                 "tts": msg.tts,
                 "system": msg.system,
                 "nonce": msg.nonce,
-                "mentions": JSON.stringify(censor(msg.mentions))
+                "mentions": simpleStringify(msg.mentions)
             })
 
 
