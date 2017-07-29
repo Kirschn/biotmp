@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 var mysql = require('mysql');
 var fs = require("fs");
 var config = JSON.parse(fs.readFileSync("config.json", "utf8"));
-var sqlConnection = mysql.createConnection();
+var sqlConnection = mysql.createConnection(config.mysql);
 var discordClient = null;
 sqlConnection.connect();
 var kue = require('kue'),
