@@ -1,5 +1,10 @@
-// el bot config
-
 {
-  "token": ""
+  "token": "",
+  "clientID": 0,
+  "mysql": {
+    "host"     : "localhost",
+    "user"     : "me",
+    "password" : "secret",
+    "database" : "my_db"
+  }
 }
