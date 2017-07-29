@@ -25,6 +25,32 @@ queue.on( 'error', function( err ) {
     console.log( 'Oops... ', err );
 });
 function biotmp(token) {
+    function queueMSG(msg) {
+        var job = queue.create('msg_process', {
+            "title": "Discord Message Processing",
+            "content": JSON.stringify({
+                "message": msg.content,
+                "channel": {
+                    "type": msg.channel.type,
+                    "id": msg.channel.id,
+                    "name": msg.channel.name
+                },
+                "server": {
+                    "id": msg.channel.guild.id,
+                    "name": msg.channel.guild.name
+                },
+                "author": msg.author,
+                "tts": msg.tts,
+                "system": msg.system,
+                "nonce": msg.nonce,
+                "mentions": JSON.stringify(msg.mentions)
+            })
+
+
+        }).priority("low").save( function(err){
+            if( !err ) console.log( job.id );
+        });
+    }
     discordClient = new Discord.Client();
     discordClient.on('ready', function () {
         console.log("Logged in as " + discordClient.user.tag);
@@ -41,20 +67,14 @@ function biotmp(token) {
             console.log("Triggered");
             msg.triggerWord = "biotmp ";
             //and queue processing
-            var job = queue.create('msg_process', {
-                "content": msg.content
-            }).priority("low").save( function(err){
-                if( !err ) console.log( job.id );
-            });
+            queueMSG(msg);
         } else if (triggerWords[msg.channel.guild.id] !== undefined) {
             if (msg.content.indexOf(triggerWords[msg.channel.guild.id] + " ") === 0) {
                 // triggered - custom triggerword
                 // add triggerword to msg object for further processing
                 msg.triggerWord = triggerWords[msg.channel.guild.id] + " ";
                 //and queue processing
-                var job = queue.create('msg_process', msg).priority("low").save( function(err){
-                    if( !err ) console.log( job.id );
-                });
+                queueMSG(msg);
 
             }
         }
