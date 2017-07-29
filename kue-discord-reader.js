@@ -35,14 +35,18 @@ function biotmp(token) {
             console.log("Triggered");
             msg.triggerWord = "biotmp ";
             //and queue processing
-            queue.create('msg_process', msg).priority("low").save();
+            var job = queue.create('msg_process', msg).priority("low").save( function(err){
+                if( !err ) console.log( job.id );
+            });
         } else if (triggerWords[msg.channel.guild.id] !== undefined) {
             if (msg.content.indexOf(triggerWords[msg.channel.guild.id] + " ") === 0) {
                 // triggered - custom triggerword
                 // add triggerword to msg object for further processing
                 msg.triggerWord = triggerWords[msg.channel.guild.id] + " ";
                 //and queue processing
-                queue.create('msg_process', msg).priority("low").save();
+                var job = queue.create('msg_process', msg).priority("low").save( function(err){
+                    if( !err ) console.log( job.id );
+                });
 
             }
         }
