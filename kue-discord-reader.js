@@ -14,6 +14,21 @@ var kue = require('kue'),
             host: '127.0.0.1'
         }
     });
+function censor(censor) {
+    var i = 0;
+
+    return function(key, value) {
+        if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
+            return '[Circular]';
+
+        if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
+            return '[Unknown]';
+
+        ++i; // so we know we aren't using the original object anymore
+
+        return value;
+    }
+}
 var triggerWords = {
 
 };
@@ -28,30 +43,31 @@ queue.on( 'error', function( err ) {
 function biotmp(token) {
     function queueMSG(msg) {
         console.log(msg);
+        var elMSGObj = {
+            "message": msg.content,
+            "channel": {
+                "type": msg.channel.type,
+                "id": msg.channel.id,
+                "name": msg.channel.name
+            },
+            "server": {
+                "id": msg.channel.guild.id,
+                "name": msg.channel.guild.name
+            },
+            "author": msg.author,
+            "tts": msg.tts,
+            "system": msg.system,
+            "nonce": msg.nonce,
+            "mentions": {
+                "everyone": msg.mentions.everyone,
+                "users": JSON.stringify(msg.mentions.users),
+                "roles": JSON.stringify(msg.mentions.roles)
+
+            }
+        };
         var job = queue.create('msg_process', {
             "title": "Discord Message Processing",
-            "message-obj": JSON.stringify({
-                "message": msg.content,
-                "channel": {
-                    "type": msg.channel.type,
-                    "id": msg.channel.id,
-                    "name": msg.channel.name
-                },
-                "server": {
-                    "id": msg.channel.guild.id,
-                    "name": msg.channel.guild.name
-                },
-                "author": msg.author,
-                "tts": msg.tts,
-                "system": msg.system,
-                "nonce": msg.nonce,
-                "mentions": {
-                    "everyone": msg.mentions.everyone,
-                    "users": JSON.stringify(msg.mentions.users),
-                    "roles": JSON.stringify(msg.mentions.roles)
-
-                }
-            })
+            "message-obj": JSON.stringify(elMSGObj, censor(elMSGObj))
 
 
         }).priority("low").save( function(err){
