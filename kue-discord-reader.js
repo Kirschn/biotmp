@@ -41,7 +41,9 @@ function biotmp(token) {
             console.log("Triggered");
             msg.triggerWord = "biotmp ";
             //and queue processing
-            var job = queue.create('msg_process', msg).priority("low").save( function(err){
+            var job = queue.create('msg_process', {
+                "content": msg.content
+            }).priority("low").save( function(err){
                 if( !err ) console.log( job.id );
             });
         } else if (triggerWords[msg.channel.guild.id] !== undefined) {
