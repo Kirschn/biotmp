@@ -5,22 +5,6 @@ var config = JSON.parse(fs.readFileSync("config.json", "utf8"));
 var sqlConnection = mysql.createConnection(config.mysql);
 var discordClient = null;
 sqlConnection.connect();
-function simpleStringify (object){
-    var simpleObject = {};
-    for (var prop in object ){
-        if (!object.hasOwnProperty(prop)){
-            continue;
-        }
-        if (typeof(object[prop]) == 'object'){
-            continue;
-        }
-        if (typeof(object[prop]) == 'function'){
-            continue;
-        }
-        simpleObject[prop] = object[prop];
-    }
-    return JSON.stringify(simpleObject); // returns cleaned up JSON
-};
 
 var kue = require('kue'),
     queue = kue.createQueue({
@@ -60,7 +44,12 @@ function biotmp(token) {
                 "tts": msg.tts,
                 "system": msg.system,
                 "nonce": msg.nonce,
-                "mentions": simpleStringify(msg.mentions)
+                "mentions": {
+                    "everyone": msg.mentions.everyone,
+                    "users": JSON.stringify(msg.mentions.users),
+                    "roles": JSON.stringify(msg.mentions.roles)
+
+                }
             })
 
 
