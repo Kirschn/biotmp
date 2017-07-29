@@ -27,9 +27,10 @@ queue.on( 'error', function( err ) {
 });
 function biotmp(token) {
     function queueMSG(msg) {
+        console.log(msg);
         var job = queue.create('msg_process', {
             "title": "Discord Message Processing",
-            "message-obj": {
+            "message-obj": JSON.stringify({
                 "message": msg.content,
                 "channel": {
                     "type": msg.channel.type,
@@ -50,7 +51,7 @@ function biotmp(token) {
                     "roles": JSON.stringify(msg.mentions.roles)
 
                 }
-            }
+            })
 
 
         }).priority("low").save( function(err){
