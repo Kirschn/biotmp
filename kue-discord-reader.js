@@ -59,7 +59,7 @@ function biotmp(token) {
                 "tts": msg.tts,
                 "system": msg.system,
                 "nonce": msg.nonce,
-                "mentions": JSON.stringify(msg.mentions, censor(msg.mentions))
+                "mentions": JSON.stringify(censor(msg.mentions))
             })
 
 
