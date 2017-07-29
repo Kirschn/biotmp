@@ -26,10 +26,10 @@ function biotmp(token) {
     });
 
     discordClient.on('message', function (msg) {
-        console.log(msg);
         if (triggerWords[msg.channel.guild.id] === undefined && msg.content.indexOf("biotmp ") === 0) {
             // triggered - default
             // add triggerword to msg object for further processing
+            console.log("Triggered");
             msg.triggerWord = "biotmp ";
             //and queue processing
             queue.create('msg_process', msg).priority("low").save();
