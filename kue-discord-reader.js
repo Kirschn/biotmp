@@ -43,13 +43,7 @@ function biotmp(token) {
                 "author": msg.author,
                 "tts": msg.tts,
                 "system": msg.system,
-                "nonce": msg.nonce,
-                "mentions": {
-                    "everyone": msg.mentions.everyone,
-                    "users": JSON.stringify(msg.mentions.users),
-                    "roles": JSON.stringify(msg.mentions.roles)
-
-                }
+                "nonce": msg.nonce
             })
 
 
