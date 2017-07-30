@@ -27,6 +27,7 @@ queue.on( 'error', function( err ) {
 });
 function biotmp(token) {
     queue.process('message_send', function (job, done) {
+        console.log(job.data.channel_id);
         discordClient.channels[job.data.channel_id].sendMessage(job.data.content, JSON.parse(job.data.options), function(error, message) {
             if (!error) {
                 done();
@@ -41,7 +42,7 @@ function biotmp(token) {
             "message": msg.content,
             "channel": {
                 "type": msg.channel.type,
-                "id": msg.channel.id,
+                "id": String(msg.channel.id),
                 "name": msg.channel.name
             },
             "server": {
