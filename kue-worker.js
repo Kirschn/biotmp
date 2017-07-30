@@ -26,7 +26,9 @@ queue.process('cmd_process', function (job, done) {
                "channel_id": msg.channel.id,
                "message": "<@" + msg.author.id + "> No such command",
                "options": JSON.stringify({})
-           }).save(done);
+           }).save(function() {
+               done();
+           });
        } else {
            // parse reply
            // first parse inserts
@@ -41,7 +43,9 @@ queue.process('cmd_process', function (job, done) {
                "channel_id": msg.channel.id,
                "message": results[0]["reply"],
                "options": JSON.stringify({})
-           }).save(done);
+           }).save(function() {
+               done();
+           });
        }
 
     });
