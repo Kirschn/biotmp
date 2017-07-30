@@ -26,6 +26,15 @@ queue.on( 'error', function( err ) {
     console.log( 'Oops... ', err );
 });
 function biotmp(token) {
+    queue.process('msg_send', function (job, done) {
+        discordClient.sendMessage(job.data.channel_id, job.data.content, JSON.parse(job.data.options), function(error, message) {
+            if (!error) {
+                done();
+            } else {
+                done(error);
+            }
+        });
+    });
     function queueMSG(msg) {
         console.log(msg);
         var elMSGObj = {
@@ -54,7 +63,7 @@ function biotmp(token) {
         for (var i in elMSGObj.mentions.users) {
             elMSGObj.mentions.users[i].lastMessage = undefined;
         }
-        var job = queue.create('msg_process', {
+        var job = queue.create('cmd_process', {
             "title": "Discord Message Processing",
             "message-obj": JSON.stringify(elMSGObj)
 
