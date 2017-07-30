@@ -26,7 +26,7 @@ queue.on( 'error', function( err ) {
     console.log( 'Oops... ', err );
 });
 function biotmp(token) {
-    queue.process('msg_send', function (job, done) {
+    queue.process('message_send', function (job, done) {
         discordClient.sendMessage(job.data.channel_id, job.data.content, JSON.parse(job.data.options), function(error, message) {
             if (!error) {
                 done();

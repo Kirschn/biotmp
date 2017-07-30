@@ -37,7 +37,7 @@ queue.process('cmd_process', function (job, done) {
                results[0]["reply"] = results[0]["reply"].replace("RNDLIST[" + itemList.join(", ") + "]RNDLIST", item);
            }
            queue.create("message_send", {
-               "title": "No such command REPLY",
+               "title": "Triggercommand Reply",
                "channel_id": msg.channel.id,
                "message": results[0]["reply"],
                "options": JSON.stringify({})
