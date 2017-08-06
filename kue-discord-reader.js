@@ -28,7 +28,17 @@ queue.on( 'error', function( err ) {
 function biotmp(token) {
     queue.process('message_send', function (job, done) {
         console.log(job.data.channel_id);
-        discordClient.channels.get(job.data.channel_id).send(job.data.message).then(done);
+        discordClient.channels.get(job.data.channel_id).send(job.data.message).then(function () {
+            done();
+        });
+    });
+    queue.process('message_image_send', function (job, done) {
+        console.log(job.data.channel_id);
+        discordClient.channels.get(job.data.channel_id).send(job.data.message, {
+            "files": [job.data.image]
+        }).then(function () {
+            done();
+        });
     });
     function queueMSG(msg) {
         console.log(msg);
